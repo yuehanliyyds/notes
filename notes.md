@@ -91,3 +91,19 @@ def getMaximum(numProducts):
     
     return max_sum  # 返回最终结果
 ```
+5. Get Data Dependence Sum (Fungible :)</p>
+https://www.fastprep.io/problems/amazon-get-data-dependence-sum</p>
+/（浮点数除法, True Division）</p>
+//（整数除法, Floor Division）
+```
+class Solution:
+  def getDataDependenceSum(self, n: int) -> int:
+    sum = 0
+    k = 1
+    while k <= n:
+        x = n // k
+        k_end = n //x
+        sum += x
+        k = k_end + 1
+    return sum
+```
