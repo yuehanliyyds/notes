@@ -63,6 +63,9 @@ class Solution:
         
         return cart
 ```
+```
+
+```
 4. Get Maximum: </p>
 https://www.fastprep.io/problems/amazon-get-maximum</p>
 拆解 range(j-1, -1, -1)</p>
@@ -187,3 +190,80 @@ requests：一个列表，表示每个请求可以被分配到的服务器范围
 关于堆：</p>
 import heapq</p>
 Python 自带 heapq 模块，它实现的是 最小堆（Min Heap），可以高效获取 最小元素。</p>
+9. Max Likes：</p>
+https://www.fastprep.io/problems/tiktok-max-likes
+```
+from collections import Counter
+
+def maximumLikes(prediction):
+    MOD = 10**9 + 7
+    
+    # 统计每个趋势的总点赞数
+    freq = Counter(prediction)
+    max_trend = max(freq.keys()) if freq else 0
+
+    # 构建新的数组，index为趋势值，value为该趋势的总和
+    trend_likes = [0] * (max_trend + 1)
+    for trend, count in freq.items():
+        trend_likes[trend] = trend * count
+
+    # 应用打家劫舍逻辑
+    dp = [0] * (max_trend + 1)
+    dp[0] = trend_likes[0]
+    if max_trend >= 1:
+        dp[1] = max(trend_likes[0], trend_likes[1])
+
+    for i in range(2, max_trend + 1):
+        dp[i] = max(dp[i - 1], dp[i - 2] + trend_likes[i])
+
+    return dp[max_trend] % MOD
+```
+思路：打家劫舍变形问题，使用dp（（1）确定递推公式；（2）注意边界值；（3）遍历顺序）</p>
+不同点：这题真正的限制是不能选择相邻的数值，而不是相邻的天数！</p>
+统计prediction中每个数的出现次数，转化为最大不相邻数的选取问题，使用dp</p>
+10. Match and Swipe:</p>
+Several TikTok creators are participating in a trending challenge called 
+There are k creators, labeled from 1 to k, and they start with a shared video sequence represented by the string videoSequence.</p>
+How the challenge works: Each creator takes turns (creator 1 goes first, followed by creator 2, and so on, cycling back to creator 1 after creator k's turn). On each turn, a creator can remove any two consecutive matching clips (represented by matching letters in videoSequence) and merge the remaining parts of the sequence back together.</p>
+
+The game continues until there are no consecutive matching clips left.
+If a creator cannot make a move, they lose, and the challenge ends.
+Given that all creators play strategically, determine the number of the creator who will lose.</p>
+Example:
+
+Given: videoSequence = "pzwoowz"， k = 3
+
+Step-by-Step Actions:
+
+Creator 1: Remove the consecutive pair w and w → new sequence: pzwwz</p>
+Creator 2: Remove the consecutive pair z and z → new sequence: pzz</p>
+Creator 3: Remove the consecutive pair z and z → new sequence: p</p>
+Creator 1: Cannot make a valid move → loses.</p>
+Answer: 1</p>
+Function Description:</p>
+Complete the function: findLoser
+
+Parameters:
+
+string videoSequence – the shared video sequence.</p>
+int k – the number of creators participating in the challenge.</p>
+Returns:
+
+int – the creator who cannot make a move.
+```
+def findLoser(videoSequence, k):
+    stack = []
+    current_player = 1
+
+    for char in videoSequence:
+        if stack and stack[-1] == char:
+            stack.pop()
+            current_player = (current_player % k) + 1
+        else:
+            stack.append(char)
+
+    return current_player
+```
+思路：能消掉的数对是固定的，用栈模拟，求最后轮到谁</p>
+stack[-1]：获取栈顶元素。因为 Python 中索引 -1 表示最后一个元素</p>
+TC：O(n)</p>
