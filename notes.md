@@ -63,8 +63,38 @@ class Solution:
         
         return cart
 ```
+上述方法tc过大，无法通过所有的test cases
 ```
+class Solution:
+    def processQueriesOnCart(self, items: List[int], query: List[int]) -> List[int]:
+        # 用deque存储cart
+        cart = items[:]
+        # 用字典记录每个元素对应的索引队列
+        indices = {}
+        
+        # 初始化索引队列
+        for i, item in enumerate(cart):
+            if item not in indices:
+                indices[item] = deque()
+            indices[item].append(i)
 
+        # 处理查询
+        for q in query:
+            if q > 0:
+                # 添加新元素
+                cart.append(q)
+                if q not in indices:
+                    indices[q] = deque()
+                indices[q].append(len(cart) - 1)
+            else:
+                # 删除元素
+                target = abs(q)
+                if target in indices and indices[target]:
+                    remove_index = indices[target].popleft()
+                    cart[remove_index] = None
+   
+        # 返回未被删除的元素
+        return [item for item in cart if item is not None]
 ```
 4. Get Maximum: </p>
 https://www.fastprep.io/problems/amazon-get-maximum</p>
